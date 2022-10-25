@@ -90,7 +90,7 @@ public class SBinTre<T> {
         return antall == 0;
     }
 
-    // Metode som legger inn en verdi i treet - kompendiet 5.2.3a)
+    // Modifisert metode som legger inn en verdi i treet - original er 5.2.3 a) fra kompendiet
     public boolean leggInn(T verdi) {
         Objects.requireNonNull(verdi, "Ulovlig med nullverdier!");
 
@@ -105,8 +105,7 @@ public class SBinTre<T> {
         }
 
         // p er nå null, dvs. ute av treet, q er den siste vi passerte
-
-|        p = new Node<>(verdi, q);                   // oppretter en ny node
+        p = new Node<>(verdi, q);                // oppretter en ny node med foreldrereferanse
 
         if (q == null) rot = p;                  // p blir rotnode
         else if (cmp < 0) q.venstre = p;         // venstre barn til q
@@ -124,8 +123,13 @@ public class SBinTre<T> {
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
+    // Metode som returnerer antall forekomster av verdi i treet
     public int antall(T verdi) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+
+        // Hvis treet er tomt, returneres 0
+        if(verdi == null) return 0;
+
+        return antall;
     }
 
     public void nullstill() {
