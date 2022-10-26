@@ -15,14 +15,20 @@ public class SBinTre<T> {
         System.out.println(tre.antall()); // Utskrift: 10 */
 
         // Oppgave 2
-        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
+        /*Integer[] a = {4,7,2,9,4,10,8,7,4,6};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) { tre.leggInn(verdi); }
         System.out.println(tre.antall()); // Utskrift: 10
         System.out.println(tre.antall(5)); // Utskrift: 0
         System.out.println(tre.antall(4)); // Utskrift: 3
         System.out.println(tre.antall(7)); // Utskrift: 2
-        System.out.println(tre.antall(10)); // Utskrift: 1
+        System.out.println(tre.antall(10)); // Utskrift: 1*/
+
+        // Oppgave 3a
+        Integer[] a = {4,7,2,3,9,5,10,8,1};
+        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
+        for (int verdi : a) {tre.leggInn(verdi);}
+        System.out.println(førstePostorden(tre.rot));
     }
 
     private static final class Node<T>   // en indre nodeklasse
@@ -158,8 +164,15 @@ public class SBinTre<T> {
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
+    // Metode som finner første node i postorden
     private static <T> Node<T> førstePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Fortsetter så lenge p har barn
+        while(p.venstre != null || p.høyre != null) {
+            // Setter p til sitt venstrebarn
+            // Ellers settes p til sitt høyrebarn
+            p = (p.venstre != null) ? p.venstre : p.høyre;
+        }
+        return p; // Returnerer første node i postorden
     }
 
     private static <T> Node<T> nestePostorden(Node<T> p) {
