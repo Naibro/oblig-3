@@ -136,27 +136,20 @@ public class SBinTre<T> {
 
     // Metode som returnerer antall forekomster av gitt verdi i treet
     public int antall(T verdi) {
-        // Starter i roten
-        Node<T> p = rot;
-
-        // Hjelpevariabler
-        int antall = 0;
-        int cmp;
+        Node<T> p = rot; // Starter i roten
+        int antall = 0; // Hjelpevariabel
 
         // Fortsetter sammenligningen til p er ute av treet (null)
         while(p != null){
             // Sammenligner gitt verdi med nåværende p sin verdi
-            cmp = comp.compare(verdi,p.verdi);
+            int cmp = comp.compare(verdi,p.verdi);
 
-            // Hvis gitt verdi er mindre enn p sin verdi, går vi til venstre
-            if(cmp < 0) p = p.venstre;
+            /* Hvis gitt verdi er mindre enn p sin verdi, går vi til venstre
+             * Ellers er verdien større eller lik og vi går vi til høyre */
+            p = cmp < 0 ? p.venstre : p.høyre;
 
-            // Ellers er verdien større eller lik og vi går vi til høyre
-            else {
-                // Ekstra sjekk om den faktisk er lik, øker isåfall antallet med 1
-                if(cmp == 0) antall++;
-                p = p.høyre; // Går til høyre
-            }
+            // Ekstra sjekk om den faktisk er lik, øker isåfall antallet med 1
+            if(cmp == 0) antall++;
         }
         return antall; // Returnerer antall forekomster av gitt verdi
     }
