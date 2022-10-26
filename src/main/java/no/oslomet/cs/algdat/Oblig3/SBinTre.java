@@ -8,10 +8,21 @@ import java.util.StringJoiner;
 
 public class SBinTre<T> {
     public static void main(String[]args){
-        Integer[] a = {4,7,2,9,5,10,8,1,3,6};
+        // Oppgave 1
+        /*Integer[] a = {4,7,2,9,5,10,8,1,3,6};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) {tre.leggInn(verdi); }
+        System.out.println(tre.antall()); // Utskrift: 10 */
+
+        // Oppgave 2
+        Integer[] a = {4,7,2,9,4,10,8,7,4,6};
+        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
+        for (int verdi : a) { tre.leggInn(verdi); }
         System.out.println(tre.antall()); // Utskrift: 10
+        System.out.println(tre.antall(5)); // Utskrift: 0
+        System.out.println(tre.antall(4)); // Utskrift: 3
+        System.out.println(tre.antall(7)); // Utskrift: 2
+        System.out.println(tre.antall(10)); // Utskrift: 1
     }
 
     private static final class Node<T>   // en indre nodeklasse
@@ -123,13 +134,31 @@ public class SBinTre<T> {
         throw new UnsupportedOperationException("Ikke kodet ennå!");
     }
 
-    // Metode som returnerer antall forekomster av verdi i treet
+    // Metode som returnerer antall forekomster av gitt verdi i treet
     public int antall(T verdi) {
+        // Starter i roten
+        Node<T> p = rot;
 
-        // Hvis treet er tomt, returneres 0
-        if(verdi == null) return 0;
+        // Hjelpevariabler
+        int antall = 0;
+        int cmp;
 
-        return antall;
+        // Fortsetter sammenligningen til p er ute av treet (null)
+        while(p != null){
+            // Sammenligner gitt verdi med nåværende p sin verdi
+            cmp = comp.compare(verdi,p.verdi);
+
+            // Hvis gitt verdi er mindre enn p sin verdi, går vi til venstre
+            if(cmp < 0) p = p.venstre;
+
+            // Ellers er verdien større eller lik og vi går vi til høyre
+            else {
+                // Ekstra sjekk om den faktisk er lik, øker isåfall antallet med 1
+                if(cmp == 0) antall++;
+                p = p.høyre; // Går til høyre
+            }
+        }
+        return antall; // Returnerer antall forekomster av gitt verdi
     }
 
     public void nullstill() {
