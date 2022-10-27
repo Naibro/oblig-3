@@ -25,10 +25,11 @@ public class SBinTre<T> {
         System.out.println(tre.antall(10)); // Utskrift: 1*/
 
         // Oppgave 3a
-        Integer[] a = {4,7,2,3,9,5,10,8,1};
+        Integer[] a = {4,2,7,1,3,5,9,8,10};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) {tre.leggInn(verdi);}
-        System.out.println(førstePostorden(tre.rot));
+        System.out.println("Første i postorden: "+førstePostorden(tre.rot));
+        System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));
     }
 
     private static final class Node<T>   // en indre nodeklasse
@@ -175,8 +176,31 @@ public class SBinTre<T> {
         return p; // Returnerer første node i postorden
     }
 
+    // Metode som returnerer den neste i postorden
     private static <T> Node<T> nestePostorden(Node<T> p) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Referanse til foreldernoden f
+        Node<T> f = p.forelder;
+
+        // Tilfelle 1:
+        // Hvis p ikke har en forelder (er rotnoden), returneres null
+        if (f == null){
+            return null;
+        }
+
+        // Tilfelle 2:
+        /* Hvis foreldrenoden f ikke har et høyrebarn || p er et høyrebarn
+         * så er forelderen f neste i postorden */
+        if(f.høyre == null || f.høyre == p){
+            return f;
+        }
+
+        // Tilfelle 3:
+        /* Ellers har foreldrenoden f to barn, og den neste i postorden er
+         * den noden som kommer først i subtreet med f.høyre som rot */
+        else {
+            // Kaller derfor på førstePostorden på det nye subtreet
+            return førstePostorden(f.høyre);
+        }
     }
 
     public void postorden(Oppgave<? super T> oppgave) {
