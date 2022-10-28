@@ -32,14 +32,18 @@ public class SBinTre<T> {
         System.out.println("Første i postorden: "+førstePostorden(tre.rot));
         System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));*/
 
-        // Oppgave 4a
-        Integer[] a = {4,2,7,1,3};
+        // Oppgave 4
+        Integer[] a = {4,2,7,1,3,9,5};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) {tre.leggInn(verdi);}
         AtomicReference<String> postorden = new AtomicReference<>();
         Oppgave<Integer> test = t -> postorden.set(postorden.get() + " " + t.toString()) ;
         postorden.set("Postorden:");
         tre.postorden(test);
+        System.out.println(postorden);
+
+        postorden.set("Rekursiv postorden:");
+        tre.postordenRecursive(test);
         System.out.println(postorden);
     }
 
@@ -194,16 +198,12 @@ public class SBinTre<T> {
 
         // Tilfelle 1:
         // Hvis p ikke har en forelder (er rotnoden), returneres null
-        if (f == null){
-            return null;
-        }
+        if (f == null) return null;
 
         // Tilfelle 2:
         /* Hvis foreldrenoden f ikke har et høyrebarn || p er et høyrebarn
          * så er forelderen f neste i postorden */
-        if(f.høyre == null || f.høyre == p){
-            return f;
-        }
+        if(f.høyre == null || f.høyre == p) return f;
 
         // Tilfelle 3:
         /* Ellers har foreldrenoden f to barn, og den neste i postorden er
@@ -230,8 +230,18 @@ public class SBinTre<T> {
         postordenRecursive(rot, oppgave);
     }
 
+    // Metode som rekursivt utfører en "oppgave" og skriver ut treet i postorden
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Sjekker venstre subtre og fortsetter til p ikke har noen venstrebarn
+        if(p.venstre != null){
+            postordenRecursive(p.venstre,oppgave);
+        }
+        // Sjekker høyre subtre og fortsetter til p ikke har noen høyrebarn
+        if (p.høyre != null){
+            postordenRecursive(p.høyre,oppgave);
+        }
+        // Utfører oppgaven med å skrive ut når p ikke har flere barn (begge if-testene gir false)
+        oppgave.utførOppgave(p.verdi); // Skriver ut etter if-testene for å få det i postorden
     }
 
     public ArrayList<T> serialize() {
