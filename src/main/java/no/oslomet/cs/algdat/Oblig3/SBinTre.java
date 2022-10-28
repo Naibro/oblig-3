@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SBinTre<T> {
     public static void main(String[]args){
@@ -24,12 +25,22 @@ public class SBinTre<T> {
         System.out.println(tre.antall(7)); // Utskrift: 2
         System.out.println(tre.antall(10)); // Utskrift: 1*/
 
-        // Oppgave 3a
-        Integer[] a = {4,2,7,1,3,5,9,8,10};
+        // Oppgave 3
+        /*Integer[] a = {4,2,7,1,3,5,9,8,10};
         SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
         for (int verdi : a) {tre.leggInn(verdi);}
         System.out.println("Første i postorden: "+førstePostorden(tre.rot));
-        System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));
+        System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));*/
+
+        // Oppgave 4a
+        Integer[] a = {4,2,7,1,3};
+        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
+        for (int verdi : a) {tre.leggInn(verdi);}
+        AtomicReference<String> postorden = new AtomicReference<>();
+        Oppgave<Integer> test = t -> postorden.set(postorden.get() + " " + t.toString()) ;
+        postorden.set("Postorden:");
+        tre.postorden(test);
+        System.out.println(postorden);
     }
 
     private static final class Node<T>   // en indre nodeklasse
@@ -203,8 +214,16 @@ public class SBinTre<T> {
         }
     }
 
+    // Metode som utfører en "oppgave" og skriver ut treet i postorden
     public void postorden(Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Setter p til å være den første i postorden
+        Node<T> p = førstePostorden(rot);
+
+        // Fortsetter til p er ute av treet (null)
+        while(p != null){
+            oppgave.utførOppgave(p.verdi); // Utfører oppgave (skrive p sin verdi)
+            p = nestePostorden(p); // Setter p til den neste noden i postorden
+        }
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
