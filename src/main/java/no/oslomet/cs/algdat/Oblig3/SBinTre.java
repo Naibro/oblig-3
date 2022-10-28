@@ -5,47 +5,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SBinTre<T> {
-    public static void main(String[]args){
-        // Oppgave 1
-        /*Integer[] a = {4,7,2,9,5,10,8,1,3,6};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi); }
-        System.out.println(tre.antall()); // Utskrift: 10 */
-
-        // Oppgave 2
-        /*Integer[] a = {4,7,2,9,4,10,8,7,4,6};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) { tre.leggInn(verdi); }
-        System.out.println(tre.antall()); // Utskrift: 10
-        System.out.println(tre.antall(5)); // Utskrift: 0
-        System.out.println(tre.antall(4)); // Utskrift: 3
-        System.out.println(tre.antall(7)); // Utskrift: 2
-        System.out.println(tre.antall(10)); // Utskrift: 1*/
-
-        // Oppgave 3
-        /*Integer[] a = {4,2,7,1,3,5,9,8,10};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi);}
-        System.out.println("Første i postorden: "+førstePostorden(tre.rot));
-        System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));*/
-
-        // Oppgave 4
-        Integer[] a = {4,2,7,1,3,9,5};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi);}
-        AtomicReference<String> postorden = new AtomicReference<>();
-        Oppgave<Integer> test = t -> postorden.set(postorden.get() + " " + t.toString()) ;
-        postorden.set("Postorden:");
-        tre.postorden(test);
-        System.out.println(postorden);
-
-        postorden.set("Rekursiv postorden:");
-        tre.postordenRecursive(test);
-        System.out.println(postorden);
-    }
 
     private static final class Node<T>   // en indre nodeklasse
     {
@@ -186,7 +147,7 @@ public class SBinTre<T> {
         while(p.venstre != null || p.høyre != null) {
             // Setter p til sitt venstrebarn
             // Ellers settes p til sitt høyrebarn
-            p = (p.venstre != null) ? p.venstre : p.høyre;
+            p = p.venstre != null ? p.venstre : p.høyre;
         }
         return p; // Returnerer første node i postorden
     }
@@ -197,7 +158,7 @@ public class SBinTre<T> {
         Node<T> f = p.forelder;
 
         // Tilfelle 1:
-        // Hvis p ikke har en forelder (er rotnoden), returneres null
+        // Hvis p ikke har en forelder (p er rotnoden), returneres null
         if (f == null) return null;
 
         // Tilfelle 2:
@@ -232,11 +193,11 @@ public class SBinTre<T> {
 
     // Metode som rekursivt utfører en "oppgave" og skriver ut treet i postorden
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        // Sjekker venstre subtre og fortsetter til p ikke har noen venstrebarn
+        // Sjekker venstre subtre
         if(p.venstre != null){
             postordenRecursive(p.venstre,oppgave);
         }
-        // Sjekker høyre subtre og fortsetter til p ikke har noen høyrebarn
+        // Sjekker høyre subtre
         if (p.høyre != null){
             postordenRecursive(p.høyre,oppgave);
         }
