@@ -7,30 +7,6 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class SBinTre<T> {
-    public static void main(String[]args){
-        // Oppgave 1
-        /*Integer[] a = {4,7,2,9,5,10,8,1,3,6};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi); }
-        System.out.println(tre.antall()); // Utskrift: 10 */
-
-        // Oppgave 2
-        /*Integer[] a = {4,7,2,9,4,10,8,7,4,6};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) { tre.leggInn(verdi); }
-        System.out.println(tre.antall()); // Utskrift: 10
-        System.out.println(tre.antall(5)); // Utskrift: 0
-        System.out.println(tre.antall(4)); // Utskrift: 3
-        System.out.println(tre.antall(7)); // Utskrift: 2
-        System.out.println(tre.antall(10)); // Utskrift: 1*/
-
-        // Oppgave 3a
-        Integer[] a = {4,2,7,1,3,5,9,8,10};
-        SBinTre<Integer> tre = new SBinTre<>(Comparator.naturalOrder());
-        for (int verdi : a) {tre.leggInn(verdi);}
-        System.out.println("Første i postorden: "+førstePostorden(tre.rot));
-        System.out.println("Neste i postorden: "+nestePostorden(førstePostorden(tre.rot)));
-    }
 
     private static final class Node<T>   // en indre nodeklasse
     {
@@ -171,7 +147,7 @@ public class SBinTre<T> {
         while(p.venstre != null || p.høyre != null) {
             // Setter p til sitt venstrebarn
             // Ellers settes p til sitt høyrebarn
-            p = (p.venstre != null) ? p.venstre : p.høyre;
+            p = p.venstre != null ? p.venstre : p.høyre;
         }
         return p; // Returnerer første node i postorden
     }
@@ -182,17 +158,13 @@ public class SBinTre<T> {
         Node<T> f = p.forelder;
 
         // Tilfelle 1:
-        // Hvis p ikke har en forelder (er rotnoden), returneres null
-        if (f == null){
-            return null;
-        }
+        // Hvis p ikke har en forelder (p er rotnoden), returneres null
+        if (f == null) return null;
 
         // Tilfelle 2:
         /* Hvis foreldrenoden f ikke har et høyrebarn || p er et høyrebarn
          * så er forelderen f neste i postorden */
-        if(f.høyre == null || f.høyre == p){
-            return f;
-        }
+        if(f.høyre == null || f.høyre == p) return f;
 
         // Tilfelle 3:
         /* Ellers har foreldrenoden f to barn, og den neste i postorden er
@@ -203,16 +175,34 @@ public class SBinTre<T> {
         }
     }
 
+    // Metode som utfører en "oppgave" og skriver ut treet i postorden
     public void postorden(Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Setter p til å være den første i postorden
+        Node<T> p = førstePostorden(rot);
+
+        // Fortsetter til p er ute av treet (null)
+        while(p != null){
+            oppgave.utførOppgave(p.verdi); // Utfører oppgave (skrive p sin verdi)
+            p = nestePostorden(p); // Setter p til den neste noden i postorden
+        }
     }
 
     public void postordenRecursive(Oppgave<? super T> oppgave) {
         postordenRecursive(rot, oppgave);
     }
 
+    // Metode som rekursivt utfører en "oppgave" og skriver ut treet i postorden
     private void postordenRecursive(Node<T> p, Oppgave<? super T> oppgave) {
-        throw new UnsupportedOperationException("Ikke kodet ennå!");
+        // Sjekker venstre subtre
+        if(p.venstre != null){
+            postordenRecursive(p.venstre,oppgave);
+        }
+        // Sjekker høyre subtre
+        if (p.høyre != null){
+            postordenRecursive(p.høyre,oppgave);
+        }
+        // Utfører oppgaven med å skrive ut når p ikke har flere barn (begge if-testene gir false)
+        oppgave.utførOppgave(p.verdi); // Skriver ut etter if-testene for å få det i postorden
     }
 
     public ArrayList<T> serialize() {
