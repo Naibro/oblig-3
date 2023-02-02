@@ -24,3 +24,7 @@ hs_err_pid*
 
 # Project exclude paths
 /.gradle/
+
+*
+!**/SBinTre.java
+!README.md
